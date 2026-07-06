@@ -37,7 +37,7 @@ Export barrels `index.ts` are ONLY for exporting the content of other files *und
 
 Within such directory, modules import each other directly, NEVER from the barrels. Outside this directory, the modules should ONLY be imported from the barrels.
 
-Conventionally `index.ts` should just be a list of `export * from './foo.ts';` statements sorted alphabetically. Always export all of the content; if some symbols are not for public, it's not for the barrel to decide.
+Conventionally `index.ts` should just be a list of `export * from './foo.ts';` statements sorted alphabetically. Always export all of the content of the modules; if some symbols are not for public, it's not for the barrel to decide.
 
 ### Paradigm Mixing
 
@@ -53,7 +53,17 @@ If it's OOP, then only classes are allowed top-level, in such case stick with `C
 
 If it's functions, then stick with `kebab-case.ts` filenames, the name generally should not match the name of a single function and instead be a broad term for a group of functions (e.g. valid examples we've used: `string.ts`, `json.ts`, `object.ts`, `array.ts`, `date.ts`, `math.ts`, etc).
 
-Once again: it is NEVER acceptable to have functions mixed in the same files as classes, and even in the same directories.
+Once again: it is NEVER acceptable to have functions mixed in the same files as classes.
+
+The same applies to directories: the following is NOT OK:
+
+```
+src/
+    managers/
+        BarManager.ts
+        FooManager.ts
+        foo-utils.ts // WTF
+```
 
 ### When (Not) To Use Functions
 
@@ -79,9 +89,99 @@ It always starts the same: "just need a little helper here, it's only used once,
 
 - Functions that you want to put alongside classes should typically be instance methods — even if they don't use `this`.
 
-### Minimization Objectives
+### Ownership
 
-### Throw / Catch
+The concept of ownership is very simple. You have structural stuff in your code: modules, classes, methods, functions, blocks with functions, etc. (essentially stuff with curly braces).
+
+Each such thing can own "state", "logic" and "contracts". State is basically variables, logic is code, contracts are interfaces, types and global constants.
+
+"Owning" basically means that it is possible to say that the owner is a _single authoritative source of truth_ for the thing it owns. Which simply means, every time we need to do something to "foo", we first locate who owns "foo" and see if the owner provides the thing we need. If not, we need to see if the new functionality can be added to the owner _cleanly_. If the owner is already doing too much, it might be time to split its responsibilities: introduce a new owner for a subset of state and/or logic, and amend the consumers to use the new owner instead.
+
+By very definition of ownership being a *single authoritative source of truth*, it is NEVER appropriate to have multiple owners for the same thing. E.g. this should never exist:
+
+```ts
+findFoo(id: string) {
+    // Not cool; consumers should always use FooService directly, not via middlemen
+    return this.fooService.findFoo(id);
+}
+```
+
+**Rule:**
+
+When ownership is changed, all consumers should be updated.
+
+### Try / Catch
+
+Try/catch looks like regular flow control construct, but it represents much more than just error handling mechanics. Conceptually, exceptions are thrown to break the normal flow of execution. Such exceptions should be caught and handled in a centralized manner.
+
+Therefore, try/catch should never be treated as a regular control flow construct. It should NEVER occur in the middle of the method, or inside other constructs. There should NEVER be other constructs preceeding or following it.
+
+There are a fininte number of patterns where it can exist:
+
+#### Request Handling
+
+```ts
+async handleRequest(params: SomeParams) {
+    try {
+        // Do the thing that may fail
+        await this.tryDoSomething();
+        // Log success
+        // Increment metrics
+    } catch (error) {
+        // Log error
+        // Increment metrics
+    } finally {
+        // Cleanup
+    }
+}
+```
+
+#### Corner Case Handling
+
+```ts
+async readFile(fileName: string) {
+    try {
+        return await fs.readFile(fileName, 'utf8');
+    } catch (error: any) {
+        if (error?.code === 'ENOENT') {
+            return this.fallbackContent();
+        }
+        // Re-throw if can't handle
+        throw error;
+    }
+}
+```
+
+#### Fallback
+
+Good:
+
+```ts
+fetchFoo() {
+    try {
+        return this.something();
+    } catch (error) {
+        // Report the warning optionally
+        return this.somethingElse();
+    }
+}
+```
+
+Bad:
+
+```ts
+doStuff(whatever: Whatever) {
+    let foo;
+    try {
+        foo = this.something()
+    } catch (error) {
+        foo = this.somethingElse();
+    }
+    // Carry on working with foo like no big deal
+}
+```
+
+
 
 ## P1 — Common Sense
 
@@ -130,6 +230,33 @@ Operational checks are similar, but they occur after evaluating something that i
         return foo;
     }
     ```
+
+### Reduction
+
+The art of programming is surprisingly similar to the art of simplifying math expressions. Given a bunch of complexity, you perform a series of transformations to reduce it to a simpler form that does not change the end result.
+
+### Minimization
+
+"Minimization" is a simple idea which comes from optimization: when the exact solution cannot be found, the best solution can be found by minimizing the deviation from the ideal.
+
+A few example candidates for minimization:
+
+- Number of packages
+- Number of exported symbols visible publicly
+- Number of globally visible types and interfaces
+- Number of exported members within module
+- Number of modules within directory
+- Amount of state and logic owned by each class
+- Number of method or function parameters
+- Number of lines of code in a method or function
+
+Importantly, you cannot apply those blindly or mechanically: any particular measure taken to extreme will produce poor results, because oftentimes the objectives are conflicting (e.g. minimizing lines of code will produce more members, introducing noise on a higher level, etc).
+
+### Order Of Things
+
+When adding to existing modules, try to understand where exactly to stick the new code. Oftentimes there is logical order to things, so try to respect that.
+
+If you see that some things are already out of order, don't ignore, suggest the changes.
 
 ## P2 — Stylistic
 
