@@ -21,7 +21,7 @@ Whoever came up with the idea of `let foo = bar++` should be shot. If you see th
 
 Same applies to multi-storied expressions like `if ((foo || bar) && !(baz || quz))`. Each such expression usually means something, e.g.
 
-```
+```ts
 // Give names to concepts you compute locally
 const isVisible = foo || bar;
 const canAccess = !baz || !quz;
@@ -69,7 +69,7 @@ It always starts the same: "just need a little helper here, it's only used once,
 
 - Sometimes a function doesn't need to exist at all. Do not make functions like:
 
-    ```
+    ```ts
     function normalizeFoo(foo?: Foo | undefined) {
         return foo ?? null;
     }
@@ -95,7 +95,7 @@ Guards are the checks that prevent execution of the method or function. They fal
 
 Guards should occur in the beginning of the method, their purpose is to prevent the execution as early as possible. The happy path must continue un-nested, so there is only one way of structuring such code:
 
-```
+```ts
 foo() {
     if (!this.isVisible) {
         return;
@@ -108,7 +108,7 @@ Operational checks are similar, but they occur after evaluating something that i
 
 - find and throw if does not exist (a.k.a "require"):
 
-    ```
+    ```ts
     requireFoo(id: string) {
         const foo = this.foos.find(foo => foo.id === id);
         if (!foo) {
@@ -120,7 +120,7 @@ Operational checks are similar, but they occur after evaluating something that i
 
 - find with fallback:
 
-    ```
+    ```ts
     getFoo(id: string) {
         const foo = this.foos.find(foo => foo.id === id);
         if (!foo) {
