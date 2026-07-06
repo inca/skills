@@ -1,0 +1,8 @@
+{
+    "name": "@inca/skills",
+    "version": "1.0.0",
+    "description": "Skills that make agents suck less",
+    "license": "ISC",
+    "author": "Boris Okunskiy",
+    "type": "module"
+}
