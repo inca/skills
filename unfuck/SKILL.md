@@ -1,3 +1,4 @@
+---
 name: unfuck
 description: Gives you programming superpowers to make the code from meh to **really good**. Apply this skill after every coding task, before wrapping up. When used explicitly, apply the skill only to user-requested scope.
 ---
