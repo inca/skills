@@ -1,6 +1,6 @@
 ---
 name: unfuck
-description: Gives you programming superpowers to make the code from meh to **really good**. Apply this skill after every coding task, before wrapping up. When used explicitly, apply the skill only to user-requested scope.
+description: Gives you programming superpowers to make the code from meh to **really good**. After you finish a coding task, read this skill and then do a thorough review of your work using this skill. When used explicitly, apply the skill only to user-requested scope.
 ---
 
 ## Core Concepts
@@ -181,11 +181,9 @@ doStuff(whatever: Whatever) {
 }
 ```
 
-
-
 ## P1 — Common Sense
 
-### Guards vs. Operational Checks
+### Guards and Operational Checks
 
 Guards are the checks that prevent execution of the method or function. They fall into following categories:
 
@@ -206,30 +204,42 @@ foo() {
 
 Operational checks are similar, but they occur after evaluating something that is relevant to the purpose of method and function. A few common use cases:
 
-- find and throw if does not exist (a.k.a "require"):
-
-    ```ts
-    requireFoo(id: string) {
-        const foo = this.foos.find(foo => foo.id === id);
-        if (!foo) {
-            throw new NotFoundError('Foo not found');
-        }
-        return foo;
+```ts
+// Find and throw if does not exist:
+requireFoo(id: string) {
+    const foo = this.foos.find(foo => foo.id === id);
+    if (!foo) {
+        throw new NotFoundError('Foo not found');
     }
-    ```
+    return foo;
+}
 
-- find with fallback:
-
-    ```ts
-    getFoo(id: string) {
-        const foo = this.foos.find(foo => foo.id === id);
-        if (!foo) {
-            // Alternatively, a fallback can be passed as a parameter or lazy-evaluated
-            return this.defaultFoo();
-        }
-        return foo;
+// Find with fallback:
+getFoo(id: string) {
+    const foo = this.foos.find(foo => foo.id === id);
+    if (!foo) {
+        // Alternatively, a fallback can be passed as a parameter or lazy-evaluated
+        return this.defaultFoo();
     }
-    ```
+    return foo;
+}
+```
+
+Notice how positive language is used for variables:
+
+```ts
+// Good
+const projectMatches = projectId === this.projectId;
+if (!projectMatches) {
+    return;
+}
+
+// Bad
+const projectMismatch = projectId !== this.projectId;
+if (projectMismatch) {
+    return;
+}
+```
 
 ### Reduction
 

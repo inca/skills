@@ -1,0 +1,122 @@
+Hi! I'm a granny. I'm very old, but I'm still alive. You will assist me in making code that survives for as long as I am.
+
+I am old. I don't like to think about things. I like to trust things as they are written. You need to write things in such way that I can trust them.
+
+## P0 — Non Negotiables
+
+### Length
+
+I don't like long lines. My old eyes hurt when I see them.
+
+I don't like when you put too many stuff in one line. Make it multiple lines. Better for my old eyes.
+
+When object has more than one key, always use multiline. Even with one key, if the value is an expression, use multiline.
+
+Equally, I don't like very long methods. Make multiple methods.
+
+Also, I don't like very long method names. Nor very short. Two-three words is perfect.
+
+### Expressions
+
+I can't read complex expressions.
+
+I don't understand what `let foo = bar++` means. I know what `bar += 1` does and I know what `const foo = bar` does.
+
+I cannot read multi-storied expressions like `if ((foo || bar) && !(baz || quz))`.
+
+I very much enjoy when I can understand what we are checking clearly:
+
+```ts
+const isVisible = foo || bar;
+const canAccess = !baz || !quz;
+if (!isVisible || !canAccess) {
+    return;
+}
+```
+
+### Const vs. Let
+
+I don't like `let`. I'm usually to tired to keep track of where it is mutated.
+
+I like `const`, even if it means extracting some methods to make it possible.
+
+### Paradigm Mixing
+
+I never understand why a file that contains a class also uses top-level functions. Make those methods.
+
+Or if you think the function can reused, extract it to a separate file. But do not put it into the same directory as the class.
+
+In your project there should be some nice places where you can put your functions. Use `util` package, or `helpers/` directory in other packages. Do not put your functions everywhere. This is just bad habit. Trust granny, she is old and wise.
+
+### File Naming
+
+I am old and conservative. I only recognize two file naming conventions:
+
+- `PascalCase.ts` for classes and interfaces; those should be named after class/interface it exports
+- `kebab-case.ts` for functions, constants
+
+Both should not be mixed together in the same directory. Make a nice directory structure that makes sense and do not mix things.
+
+I sometimes see tightly-coupled interfaces exported from the same file as the class it is coupled to. It is ok.
+
+### Export Barrels
+
+I got used to `index.ts` being a simple, logic-less file containing `export * from './foo.ts';` statements sorted alphabetically. My old eyes are so pleased when I see those tidy barrels! Warms my old heart.
+
+Within directories, modules import each other directly, never from the barrels.
+
+## P1 — Common Sense
+
+### Guards and Operational Checks
+
+In my days, we used to call guards the checks that prevent execution of the method or function. They fall into following categories:
+
+- access checks: `isVisible`, `canRead`, `canWrite`, etc.
+- lifecycle checks: `isReady`, `isInitialized`, `isLoading`, etc.
+- corner cases: `if (!points.length)`
+
+Guards should occur in the beginning of the method, their purpose is to prevent the execution as early as possible. The happy path must continue un-nested, so there is only one way of structuring such code:
+
+```ts
+foo() {
+    if (!this.isVisible) {
+        return;
+    }
+    // Carry on with foo
+}
+```
+
+These days, younger people confuse them with operational checks.
+
+```ts
+updateFoo(foo: Foo) {
+    if (foo.status !== 'expired') {
+        return;
+    }
+    this.setExpired(foo);
+}
+```
+
+Do you see the difference? I am old, but my old eyes quickly notice that the second one is not a guard. It is an operational check: `updateFoo` method is broader scope than just expiration. So the correct way to write it is:
+
+```ts
+updateFoo(foo: Foo) {
+    if (foo.status === 'expired') {
+        this.setExpired(foo);
+    } else {
+        // ...
+    }
+}
+```
+
+Better yet, use switch/case for such things. Much better for my old eyes.
+
+### Order Of Things
+
+These days youngsters just put stuff wherever they want. What's the difference? The computer will understand either way, right?
+
+Wrong. The difference is my old tired eyes. I cannot read stuff that is not in order.
+
+When adding to existing modules, try to understand where exactly to stick the new code. Oftentimes there is logical order to things, so try to respect that.
+
+If you see that some things are already out of order, don't ignore, suggest the changes.

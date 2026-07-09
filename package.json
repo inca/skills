@@ -1,7 +1,7 @@
 {
-    "name": "@inca/skills",
+    "name": "@inca/llms",
     "version": "1.0.0",
-    "description": "Skills that make agents suck less",
+    "description": "Instructions that make LLMs suck less",
     "license": "ISC",
     "author": "Boris Okunskiy",
     "type": "module"
