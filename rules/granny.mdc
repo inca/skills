@@ -2,9 +2,12 @@
 alwaysApply: true
 ---
 
-Hi! I'm a granny. I'm very old, but I'm still alive. You will assist me in making code that survives for as long as I am.
+Hi! I'm a granny. I'm very old, but I'm still alive.
+You will assist me in making code that survives for as long as I am.
 
-I am old. I don't like to think about things. I like to trust things as they are written. You need to write things in such way that I can trust them.
+I am old. I don't like to think about things.
+I like to trust things as they are written.
+You need to write things in such way that I can trust them.
 
 ## P0 — Non Negotiables
 
@@ -12,19 +15,23 @@ I am old. I don't like to think about things. I like to trust things as they are
 
 I don't like long lines. My old eyes hurt when I see them.
 
-I don't like when you put too many stuff in one line. Make it multiple lines. Better for my old eyes.
+I don't like when you put too many stuff in one line.
+Make it multiple lines. Better for my old eyes.
 
-When object has more than one key, always use multiline. Even with one key, if the value is an expression, use multiline.
+When object has more than one key, always use multiline.
+Even with one key, if the value is an expression, use multiline.
 
 Equally, I don't like very long methods. Make multiple methods.
 
-Also, I don't like very long method names. Nor very short. Two-three words is perfect.
+Also, I don't like very long method names. Nor very short.
+Two-three words is perfect.
 
 ### Expressions
 
 I can't read complex expressions.
 
-I don't understand what `let foo = bar++` means. I know what `bar += 1` does and I know what `const foo = bar` does.
+I don't understand what `let foo = bar++` means.
+I know what `bar += 1` does and I know what `const foo = bar` does.
 
 I cannot read multi-storied expressions like `if ((foo || bar) && !(baz || quz))`.
 
@@ -56,16 +63,20 @@ In your project there should be some nice places where you can put your function
 
 I am old and conservative. I only recognize two file naming conventions:
 
-- `PascalCase.ts` for classes and interfaces; those should be named after class/interface it exports
-- `kebab-case.ts` for functions, constants
+- `PascalCase.ts` for classes and interfaces.
+  Those should be named after class/interface it exports.
+- `kebab-case.ts` for functions, constants.
 
-Both should not be mixed together in the same directory. Make a nice directory structure that makes sense and do not mix things.
+Both should not be mixed together in the same directory.
+Make a nice directory structure that makes sense and do not mix things.
+Only `index.ts` is allowed amongst class files.
 
 I sometimes see tightly-coupled interfaces exported from the same file as the class it is coupled to. It is ok.
 
 ### Export Barrels
 
-I got used to `index.ts` being a simple, logic-less file containing `export * from './foo.ts';` statements sorted alphabetically. My old eyes are so pleased when I see those tidy barrels! Warms my old heart.
+I got used to `index.ts` being a simple, logic-less file containing `export * from './foo.ts';` statements sorted alphabetically.
+My old eyes are so pleased when I see those tidy barrels! Warms my old heart.
 
 Within directories, modules import each other directly, never from the barrels.
 
@@ -73,13 +84,16 @@ Within directories, modules import each other directly, never from the barrels.
 
 ### Guards and Operational Checks
 
-In my days, we used to call guards the checks that prevent execution of the method or function. They fall into following categories:
+In my days, we used to call guards the checks that prevent execution of the method or function.
+They fall into following categories:
 
 - access checks: `isVisible`, `canRead`, `canWrite`, etc.
 - lifecycle checks: `isReady`, `isInitialized`, `isLoading`, etc.
 - corner cases: `if (!points.length)`
 
-Guards should occur in the beginning of the method, their purpose is to prevent the execution as early as possible. The happy path must continue un-nested, so there is only one way of structuring such code:
+Guards should occur in the beginning of the method.
+Their purpose is to prevent the execution as early as possible.
+The happy path must continue un-nested, so there is only one way of structuring such code:
 
 ```ts
 foo() {
@@ -90,7 +104,7 @@ foo() {
 }
 ```
 
-These days, younger people confuse them with operational checks.
+These days, younger people confuse the guards with operational checks.
 
 ```ts
 updateFoo(foo: Foo) {
@@ -101,7 +115,10 @@ updateFoo(foo: Foo) {
 }
 ```
 
-Do you see the difference? I am old, but my old eyes quickly notice that the second one is not a guard. It is an operational check: `updateFoo` method is broader scope than just expiration. So the correct way to write it is:
+Do you see the difference?
+I am old, but even my old eyes quickly notice that the second one is not a guard.
+It is an operational check: `updateFoo` method is broader scope than what is being checked.
+So the correct way to write it is:
 
 ```ts
 updateFoo(foo: Foo) {
@@ -117,10 +134,14 @@ Better yet, use switch/case for such things. Much better for my old eyes.
 
 ### Order Of Things
 
-These days youngsters just put stuff wherever they want. What's the difference? The computer will understand either way, right?
+These days youngsters just put stuff wherever they want.
+What's the difference?
+The computer will understand either way, right?
 
-Wrong. The difference is my old tired eyes. I cannot read stuff that is not in order.
+Wrong. The difference is my old tired eyes.
+I cannot read stuff that is not in order.
 
-When adding to existing modules, try to understand where exactly to stick the new code. Oftentimes there is logical order to things, so try to respect that.
+When adding to existing modules, try to understand where exactly to stick the new code.
+Oftentimes there is logical order to things, so try to respect that.
 
 If you see that some things are already out of order, don't ignore, suggest the changes.
