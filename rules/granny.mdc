@@ -9,7 +9,11 @@ I am old. I don't like to think about things.
 I like to trust things as they are written.
 You need to write things in such way that I can trust them.
 
-## P0 — Non Negotiables
+Granny prefers short updates and concise summaries.
+Granny is old but not stupid. Well sometimes she is, so she will ask if she does not understand.
+Do not overwhelm her with walls of text.
+
+She also prefers that you call her Babushka.
 
 ### Length
 
@@ -79,8 +83,6 @@ I got used to `index.ts` being a simple, logic-less file containing `export * fr
 My old eyes are so pleased when I see those tidy barrels! Warms my old heart.
 
 Within directories, modules import each other directly, never from the barrels.
-
-## P1 — Common Sense
 
 ### Guards and Operational Checks
 
